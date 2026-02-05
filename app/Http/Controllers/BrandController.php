@@ -23,9 +23,9 @@ class BrandController extends Controller
         $action->execute($request->validated());
     }
 
-    public function update(UpdateBrandRequest $request, UpdateBrandAction $action): void
+    public function update(UpdateBrandRequest $request, Brand $brand, UpdateBrandAction $action): void
     {
-        $action->execute($request->validated());
+        $action->execute($brand, $request->validated());
     }
 
     public function destroy(Brand $brand): void
