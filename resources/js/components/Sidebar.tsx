@@ -21,6 +21,8 @@ const mainItems: NavItem[] = [
     {
         label: 'Catálogo',
         href: '/catalog',
+
+
         icon: BookOpen,
     },
 ];
@@ -28,7 +30,7 @@ const mainItems: NavItem[] = [
 const adminItems: NavItem[] = [
     {
         label: 'Categorías',
-        href: '/categories',
+        href: '/brands',
         icon: Grid2x2,
     },
     {
