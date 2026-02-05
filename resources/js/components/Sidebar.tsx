@@ -29,7 +29,7 @@ const mainItems: NavItem[] = [
 
 const adminItems: NavItem[] = [
     {
-        label: 'Categorías',
+        label: 'Marcas',
         href: '/brands',
         icon: Grid2x2,
     },
