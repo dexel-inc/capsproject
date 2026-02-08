@@ -36,3 +36,5 @@ Route::resource('brands', BrandController::class)->middleware(['auth', 'admin'])
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function (): void {
     Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
 });
+
+Route::resource('products', ProductController::class);
