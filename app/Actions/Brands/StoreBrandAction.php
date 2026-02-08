@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Brands;
 
 use App\Models\Brand;
 use Illuminate\Http\UploadedFile;

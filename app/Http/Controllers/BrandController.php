@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\StoreBrandAction;
-use App\Actions\UpdateBrandAction;
+use App\Actions\Brands\StoreBrandAction;
+use App\Actions\Brands\UpdateBrandAction;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
