@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/catalog', CatalogController::class)->name('catalog');
-Route::get('/catalog/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/catalog/{slug}', [CatalogController::class, 'show'])->name('product.show');
 Route::get('/faq', [PlaceholderController::class, 'faq'])->name('faq');
 Route::get('/cart', [PlaceholderController::class, 'cart'])->name('cart');
 
@@ -32,9 +32,8 @@ Route::middleware('guest')->group(function (): void {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::resource('brands', BrandController::class)->middleware(['auth', 'admin']);
+Route::resource('products', ProductController::class)->middleware(['auth', 'admin']);
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function (): void {
     Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
 });
-
-Route::resource('products', ProductController::class);
