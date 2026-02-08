@@ -1,13 +1,16 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import {
     Store,
     BookOpen,
     Grid2x2,
     Box,
     ChevronDown,
+    LogIn,
+    LogOut,
     Menu,
     X,
     ShieldCheck,
+    Users,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -38,11 +41,18 @@ const adminItems: NavItem[] = [
         href: '/products',
         icon: Box,
     },
+    {
+        label: 'Usuarios',
+        href: '/admin/users',
+        icon: Users,
+    },
 ];
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
     const { url } = usePage();
+    const { auth } = usePage().props as { auth: { user: { is_admin: boolean } | null } };
+    const isAdmin = auth?.user?.is_admin ?? false;
 
     const isActive = (href: string) => url === href || url.startsWith(`${href}/`);
     const isAdminActive = adminItems.some((item) => isActive(item.href));
@@ -123,32 +133,53 @@ export default function Sidebar() {
                 </div>
                 <nav className="space-y-1">
                     {mainItems.map(itemCard)}
-                    <button
-                        type="button"
-                        onClick={() => setOpenAdmin((v) => !v)}
-                        className={[
-                            'group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition',
-                            isAdminActive || openAdmin
-                                ? 'bg-zinc-100 text-zinc-900'
-                                : 'text-zinc-700 hover:bg-zinc-100',
-                        ].join(' ')}
-                    >
-                        <ShieldCheck className="h-5 w-5 shrink-0 text-zinc-500" />
-                        <div className="min-w-0 flex-1">
-                            <p className="truncate text-[15px] font-medium leading-5">Administración</p>
-                        </div>
-                        <ChevronDown
-                            className={[
-                                'h-4 w-4 shrink-0 text-zinc-500 transition-transform duration-200',
-                                openAdmin ? 'rotate-180' : '',
-                            ].join(' ')}
-                        />
-                    </button>
-
-                    {openAdmin && (
-                        <div className="ml-2 space-y-1 border-l border-zinc-200 pl-2">
-                            {adminItems.map(itemCard)}
-                        </div>
+                    {isAdmin && (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => setOpenAdmin((v) => !v)}
+                                className={[
+                                    'group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition',
+                                    isAdminActive || openAdmin
+                                        ? 'bg-zinc-100 text-zinc-900'
+                                        : 'text-zinc-700 hover:bg-zinc-100',
+                                ].join(' ')}
+                            >
+                                <ShieldCheck className="h-5 w-5 shrink-0 text-zinc-500" />
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-[15px] font-medium leading-5">Administración</p>
+                                </div>
+                                <ChevronDown
+                                    className={[
+                                        'h-4 w-4 shrink-0 text-zinc-500 transition-transform duration-200',
+                                        openAdmin ? 'rotate-180' : '',
+                                    ].join(' ')}
+                                />
+                            </button>
+                            {openAdmin && (
+                                <div className="ml-2 space-y-1 border-l border-zinc-200 pl-2">
+                                    {adminItems.map(itemCard)}
+                                </div>
+                            )}
+                        </>
+                    )}
+                    {auth?.user ? (
+                        <button
+                            type="button"
+                            onClick={() => router.post('/logout')}
+                            className="mt-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-zinc-700 transition hover:bg-zinc-100"
+                        >
+                            <LogOut className="h-5 w-5 shrink-0 text-zinc-500" />
+                            <span className="text-sm">Cerrar sesión</span>
+                        </button>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="mt-4 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-zinc-700 transition hover:bg-zinc-100"
+                        >
+                            <LogIn className="h-5 w-5 shrink-0 text-zinc-500" />
+                            <span className="text-sm">Iniciar sesión</span>
+                        </Link>
                     )}
                 </nav>
             </aside>
