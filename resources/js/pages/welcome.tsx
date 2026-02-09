@@ -1,15 +1,37 @@
 import { Head } from '@inertiajs/react';
-import SidebarLayout from '@/layouts/SidebarLayout';
 
-export default function Welcome() {
+import {
+    CollectionsBentoGrid,
+    FeaturedProductsCarousel,
+    HeroSection,
+    InfiniteMarquee,
+    MinimalFooter,
+} from '@/components/sections/home';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import type { WelcomeProps } from '@/types/home';
+
+const META_DESCRIPTION =
+    'Caps Project - Gorras premium de lujo. Nuevas colecciones, calidad excepcional. Descubre el streetwear que defines.';
+
+export default function Welcome({ featuredProducts = [], collections = [] }: WelcomeProps) {
+    const prefersReducedMotion = useReducedMotion();
+
     return (
-        <SidebarLayout>
-            <Head title="Welcome">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <>
+            <Head>
+                <title>Caps Project | Luxury Streetwear Caps</title>
+                <meta name="description" content={META_DESCRIPTION} />
+                <meta property="og:title" content="Caps Project | Luxury Streetwear Caps" />
+                <meta property="og:description" content={META_DESCRIPTION} />
+                <meta property="og:type" content="website" />
             </Head>
-            <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-            </div>
-        </SidebarLayout>
+            <main>
+                <HeroSection prefersReducedMotion={prefersReducedMotion} />
+                <InfiniteMarquee prefersReducedMotion={prefersReducedMotion} />
+                <CollectionsBentoGrid collections={collections ?? []} prefersReducedMotion={prefersReducedMotion} />
+                <FeaturedProductsCarousel products={featuredProducts ?? []} prefersReducedMotion={prefersReducedMotion} />
+                <MinimalFooter prefersReducedMotion={prefersReducedMotion} />
+            </main>
+        </>
     );
 }
