@@ -13,9 +13,13 @@ class BrandController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $brands = Brand::all();
+        $brands = Brand::query()
+            ->withCount('products')
+            ->get();
 
-        return Inertia::render('brands/Index', ['brands' => $brands]);
+        return Inertia::render('brands/Index', [
+            'brands' => $brands,
+        ]);
     }
 
     public function store(StoreBrandRequest $request, StoreBrandAction $action): void
