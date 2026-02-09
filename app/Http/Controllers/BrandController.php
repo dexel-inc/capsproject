@@ -7,11 +7,13 @@ use App\Actions\Brands\UpdateBrandAction;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class BrandController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         $brands = Brand::query()
             ->withCount('products')
@@ -22,18 +24,24 @@ class BrandController extends Controller
         ]);
     }
 
-    public function store(StoreBrandRequest $request, StoreBrandAction $action): void
+    public function store(StoreBrandRequest $request, StoreBrandAction $action): RedirectResponse
     {
         $action->execute($request->validated());
+
+        return redirect()->route('brands.index');
     }
 
-    public function update(UpdateBrandRequest $request, Brand $brand, UpdateBrandAction $action): void
+    public function update(UpdateBrandRequest $request, Brand $brand, UpdateBrandAction $action): RedirectResponse
     {
         $action->execute($brand, $request->validated());
+
+        return redirect()->route('brands.index');
     }
 
-    public function destroy(Brand $brand): void
+    public function destroy(Brand $brand): RedirectResponse
     {
         $brand->delete();
+
+        return redirect()->route('brands.index');
     }
 }

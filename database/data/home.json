@@ -1,0 +1,88 @@
+{
+    "featuredProducts": [
+        {
+            "id": 1,
+            "name": "Classic Wool Cap",
+            "slug": "classic-wool-cap",
+            "price": 89000,
+            "currency": "COP",
+            "primaryImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=640&q=80",
+            "secondaryImage": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=640&q=80",
+            "isNew": true
+        },
+        {
+            "id": 2,
+            "name": "Minimalist Black",
+            "slug": "minimalist-black",
+            "price": 75000,
+            "currency": "COP",
+            "primaryImage": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=640&q=80",
+            "secondaryImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=640&q=80",
+            "isNew": false
+        },
+        {
+            "id": 3,
+            "name": "Sport Mesh Pro",
+            "slug": "sport-mesh-pro",
+            "price": 95000,
+            "currency": "COP",
+            "primaryImage": "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=640&q=80",
+            "secondaryImage": null,
+            "isNew": true
+        },
+        {
+            "id": 4,
+            "name": "Urban Night",
+            "slug": "urban-night",
+            "price": 82000,
+            "currency": "COP",
+            "primaryImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=640&q=80",
+            "secondaryImage": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=640&q=80",
+            "isNew": false
+        },
+        {
+            "id": 5,
+            "name": "Premium Leather",
+            "slug": "premium-leather",
+            "price": 120000,
+            "currency": "COP",
+            "primaryImage": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=640&q=80",
+            "secondaryImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=640&q=80",
+            "isNew": true
+        }
+    ],
+    "collections": [
+        {
+            "id": 1,
+            "name": "Urban",
+            "slug": "urban",
+            "coverImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
+            "description": "Estilo de calle",
+            "featured": true
+        },
+        {
+            "id": 2,
+            "name": "Sport",
+            "slug": "sport",
+            "coverImage": "https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?w=800&q=80",
+            "description": "Rendimiento y estilo",
+            "featured": true
+        },
+        {
+            "id": 3,
+            "name": "Luxury",
+            "slug": "luxury",
+            "coverImage": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&q=80",
+            "description": "Edición premium",
+            "featured": false
+        },
+        {
+            "id": 4,
+            "name": "Classic",
+            "slug": "classic",
+            "coverImage": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
+            "description": "Diseños atemporales",
+            "featured": true
+        }
+    ]
+}

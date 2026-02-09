@@ -10,12 +10,13 @@ use App\Models\Brand;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
-        $products = Product::all();
+        $products = Product::with('brand:id,name')->orderBy('name')->get();
 
         return Inertia::render('products/Index', ['products' => $products]);
     }
@@ -54,7 +55,7 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
-    public function show(Product $product): \Inertia\Response
+    public function show(Product $product): Response
     {
         $product->load([
             'brand:id,name',
