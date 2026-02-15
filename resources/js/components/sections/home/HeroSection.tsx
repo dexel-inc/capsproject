@@ -2,9 +2,9 @@ import { Link } from '@inertiajs/react';
 import { ChevronRight, ShoppingBag } from 'lucide-react';
 import { useCallback, useRef, useState } from 'react';
 
-const HERO_HEADLINE = 'ELEVATE YOUR STYLE';
-const HERO_SUBHEADLINE = 'Gorras premium para quienes buscan excelencia.';
-const HERO_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=1920&q=80';
+const HERO_HEADLINE = 'Compra en FORTUNE compra elegancia';
+const HERO_SUBHEADLINE = 'Piezas creadas para quienes entienden la elegancia discreta y la exclusividad real';
+const HERO_IMAGE = '/gorra.svg';
 
 interface HeroSectionProps {
     prefersReducedMotion: boolean;
@@ -64,18 +64,17 @@ export default function HeroSection({ prefersReducedMotion }: HeroSectionProps) 
 
                 <div className="relative flex w-full flex-1 items-center justify-center p-6 lg:min-h-[85vh]">
                     <div className="relative flex aspect-square max-h-[320px] w-full max-w-md items-center justify-center sm:max-h-[400px] lg:max-h-[520px] lg:max-w-xl">
-                        <div className="absolute inset-0 rounded-2xl bg-neutral-200" />
                         {!imageError ? (
                             <img
-                                src={HERO_FALLBACK_IMAGE}
-                                alt="Gorra premium Caps Project"
+                                src={HERO_IMAGE}
+                                alt="Gorra premium Fortune"
                                 className="relative h-full w-full object-contain object-center"
                                 onError={() => setImageError(true)}
                                 loading="eager"
                                 fetchPriority="high"
                             />
                         ) : (
-                            <div className="flex h-full w-full items-center justify-center rounded-2xl bg-neutral-200">
+                            <div className="flex h-full w-full items-center justify-center rounded-2xl">
                                 <div className="h-32 w-32 rounded-full bg-neutral-300" aria-hidden="true" />
                             </div>
                         )}

@@ -1,9 +1,9 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import {
-    Store,
     BookOpen,
     Grid2x2,
     Box,
+    Package,
     ChevronDown,
     LogIn,
     LogOut,
@@ -40,6 +40,11 @@ const adminItems: NavItem[] = [
         label: 'Productos',
         href: '/products',
         icon: Box,
+    },
+    {
+        label: 'Órdenes',
+        href: '/admin/orders',
+        icon: Package,
     },
     {
         label: 'Usuarios',
@@ -114,12 +119,8 @@ export default function Sidebar() {
             >
                 <div className="mb-5 flex items-start justify-between border-b border-zinc-200 pb-4">
                     <div className="flex items-center gap-3">
-                        <div className="grid h-10 w-10 place-items-center rounded-xl bg-zinc-800 text-white">
-                            <Store className="h-5 w-5" />
-                        </div>
-                        <div>
-                            <h2 className="text-lg font-semibold leading-5 text-zinc-900">Caps Project</h2>
-                        </div>
+                        <img src="/fortunelogo.svg" alt="Fortune" className="h-9 w-auto" />
+                        <h2 className="text-lg font-semibold leading-5 text-zinc-900">Fortune</h2>
                     </div>
 
                     <button

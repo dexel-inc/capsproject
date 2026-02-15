@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { ChevronLeft, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
 
@@ -10,6 +10,7 @@ interface ProductShowProps {
 }
 
 export default function ProductShow({ product }: ProductShowProps) {
+    const [adding, setAdding] = useState(false);
     const [selectedImage, setSelectedImage] = useState(
         product.primaryImage ?? (product.images?.[0]) ?? ''
     );
@@ -21,13 +22,16 @@ export default function ProductShow({ product }: ProductShowProps) {
               : [];
 
     const handleAddToCart = () => {
-        // Placeholder: integrar con carrito más adelante
-        console.log('Agregar al carrito', product.id);
+        setAdding(true);
+        router.post('/cart', { slug: product.slug, quantity: 1 }, {
+            preserveScroll: true,
+            onFinish: () => setAdding(false),
+        });
     };
 
     return (
         <>
-            <Head title={`${product.name} | Caps Project`} />
+            <Head title={`${product.name} | Fortune`} />
             <main className="mx-auto max-w-7xl px-4 py-8 lg:py-12">
                 <Link
                     href="/catalog"
@@ -108,10 +112,11 @@ export default function ProductShow({ product }: ProductShowProps) {
                             <button
                                 type="button"
                                 onClick={handleAddToCart}
-                                className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                                disabled={adding}
+                                className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 disabled:opacity-60"
                             >
                                 <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-                                Agregar al carrito
+                                {adding ? 'Agregando...' : 'Agregar al carrito'}
                             </button>
                             <Link
                                 href="/account/wishlist"

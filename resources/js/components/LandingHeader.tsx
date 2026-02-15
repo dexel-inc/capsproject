@@ -2,28 +2,31 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { ChevronDown, Heart, Menu, Search, ShoppingBag, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const TOP_LOGOS = [
-    { key: 'nba', label: 'NBA', href: '/catalog?collection=nba' },
-    { key: 'nfl', label: 'NFL', href: '/catalog?collection=nfl' },
-    { key: 'caps', label: '🧢', href: '/catalog', icon: true },
-];
+import AuthModal from '@/components/AuthModal';
+import CartDrawer from '@/components/CartDrawer';
 
 const TOP_RIGHT_LINKS = [
     { label: 'Ayuda', href: '/faq' },
 ];
 
 const NAV_LINKS = [
-    { label: 'NBA', href: '/catalog?collection=nba' },
-    { label: 'Beisboleras', href: '/catalog?collection=beisboleras' },
-    { label: 'Talla única', href: '/catalog?collection=talla-unica' },
-    { label: 'Estilos propios', href: '/catalog?collection=estilos-propios' },
+    { label: 'Catálogo', href: '/catalog' },
+    { label: 'Ofertas', href: '/catalog?section=ofertas' },
+    { label: 'Última colección', href: '/catalog?section=ultima-coleccion' },
 ];
 
 export default function LandingHeader() {
-    const { auth } = usePage().props as { auth: { user: { name: string; is_admin: boolean } | null } };
+    const { auth, cart, flash, errors } = usePage().props as {
+        auth: { user: { name: string; is_admin: boolean } | null };
+        cart: { count: number };
+        flash?: { cartAdded?: boolean; auth_modal?: 'login' | 'register'; auth_old_input?: Record<string, unknown> };
+        errors?: Record<string, string | string[]>;
+    };
     const [searchQuery, setSearchQuery] = useState('');
     const [accountOpen, setAccountOpen] = useState(false);
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+    const [authModalOpen, setAuthModalOpen] = useState<'login' | 'register' | null>(null);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,22 +43,23 @@ export default function LandingHeader() {
         return () => document.removeEventListener('click', handleClickOutside);
     }, [accountOpen]);
 
+    useEffect(() => {
+        if (flash?.cartAdded) {
+            setCartDrawerOpen(true);
+        }
+    }, [flash?.cartAdded]);
+
+    useEffect(() => {
+        if (flash?.auth_modal) {
+            setAuthModalOpen(flash.auth_modal);
+        }
+    }, [flash?.auth_modal]);
+
     return (
         <header className="sticky top-0 z-50 bg-white shadow-sm">
             {/* Top bar */}
             <div className="border-b border-neutral-200">
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-sm">
-                    <div className="flex items-center gap-6">
-                        {TOP_LOGOS.map(({ label, href, icon, key }) => (
-                            <Link
-                                key={key}
-                                href={href}
-                                className="flex items-center gap-1.5 font-semibold text-neutral-900 transition-colors hover:text-neutral-600 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
-                            >
-                                {icon ? <span className="text-lg">{label}</span> : label}
-                            </Link>
-                        ))}
-                    </div>
+                <div className="mx-auto flex max-w-7xl items-center justify-end px-4 py-2 text-sm">
                     <div className="flex items-center gap-4">
                         {TOP_RIGHT_LINKS.map(({ label, href }) => (
                             <Link
@@ -68,7 +72,7 @@ export default function LandingHeader() {
                         ))}
                         <span className="h-4 w-px bg-neutral-300" aria-hidden="true" />
                         {auth?.user ? (
-                            <div className="relative">
+                            <div className="relative z-50">
                                 <button
                                     type="button"
                                     onClick={(e) => {
@@ -82,7 +86,7 @@ export default function LandingHeader() {
                                 </button>
                                 {accountOpen && (
                                     <div
-                                        className="absolute right-0 top-full mt-1 min-w-[180px] rounded-lg border border-neutral-200 bg-white py-2 shadow-lg"
+                                        className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded-lg border border-neutral-200 bg-white py-2 shadow-lg"
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <Link
@@ -120,18 +124,28 @@ export default function LandingHeader() {
                             </div>
                         ) : (
                             <>
-                                <Link
-                                    href="/register"
-                                    className="text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                                <button
+                                    type="button"
+                                    onClick={() => setAuthModalOpen('register')}
+                                    className="cursor-pointer text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                                 >
                                     Registrarse
-                                </Link>
-                                <Link
-                                    href="/login"
-                                    className="text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setAuthModalOpen('login')}
+                                    className="cursor-pointer text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                                 >
                                     Iniciar sesión
-                                </Link>
+                                </button>
+                                <AuthModal
+                                    open={authModalOpen !== null}
+                                    mode={authModalOpen ?? 'login'}
+                                    onClose={() => setAuthModalOpen(null)}
+                                    onSwitchMode={(mode) => setAuthModalOpen(mode)}
+                                    errors={errors}
+                                    authOldInput={flash?.auth_old_input}
+                                />
                             </>
                         )}
                     </div>
@@ -152,9 +166,10 @@ export default function LandingHeader() {
                     </button>
                     <Link
                         href="/"
-                        className="text-xl font-bold tracking-tight text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                        className="focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                        aria-label="Fortune - Inicio"
                     >
-                        Caps Project
+                        <img src="/fortunelogo.svg" alt="Fortune" className="h-8 w-auto lg:h-9" />
                     </Link>
                 </div>
 
@@ -193,13 +208,20 @@ export default function LandingHeader() {
                     >
                         <Heart className="h-5 w-5" />
                     </Link>
-                    <Link
-                        href="/cart"
-                        className="rounded-full p-2 text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
+                    <button
+                        type="button"
+                        onClick={() => setCartDrawerOpen(true)}
+                        className="relative cursor-pointer rounded-full p-2 text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                         aria-label="Carrito"
                     >
                         <ShoppingBag className="h-5 w-5" />
-                    </Link>
+                        {cart?.count > 0 && (
+                            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-neutral-900 px-1 text-[10px] font-bold text-white">
+                                {cart.count > 99 ? '99+' : cart.count}
+                            </span>
+                        )}
+                    </button>
+                    <CartDrawer open={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
                 </div>
             </div>
         </header>

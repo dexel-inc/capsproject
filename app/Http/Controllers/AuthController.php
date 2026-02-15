@@ -10,14 +10,12 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 
 final class AuthController extends Controller
 {
-    public function showLogin(): Response
+    public function showLogin(): RedirectResponse
     {
-        return Inertia::render('auth/Login');
+        return redirect()->route('home')->with('auth_modal', 'login');
     }
 
     public function login(LoginRequest $request): RedirectResponse
@@ -31,7 +29,7 @@ final class AuthController extends Controller
             return redirect()->intended(route('admin.users.index'));
         }
 
-        return redirect()->intended(route('home'));
+        return redirect()->back();
     }
 
     public function logout(Request $request): RedirectResponse
@@ -40,12 +38,12 @@ final class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('home');
     }
 
-    public function showRegister(): Response
+    public function showRegister(): RedirectResponse
     {
-        return Inertia::render('auth/Register');
+        return redirect()->route('home')->with('auth_modal', 'register');
     }
 
     public function register(RegisterRequest $request): RedirectResponse
@@ -56,6 +54,6 @@ final class AuthController extends Controller
         auth()->login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 }

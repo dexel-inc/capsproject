@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import type { FormEvent } from 'react';
 
 import AppButton from '@/components/ui/AppButton';
@@ -22,11 +22,8 @@ export default function Login() {
             <Head title="Iniciar sesión" />
 
             <div className="w-full max-w-md">
-                <div className="mb-8 flex items-center justify-center gap-3">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-zinc-900 text-white">
-                        <LogIn className="h-6 w-6" />
-                    </div>
-                    <h1 className="text-2xl font-semibold text-zinc-900">Caps Project</h1>
+                <div className="mb-8 flex justify-center">
+                    <img src="/fortunelogo.svg" alt="Fortune" className="h-12 w-auto" />
                 </div>
 
                 <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">

@@ -170,7 +170,7 @@ export default function MinimalFooter({ prefersReducedMotion }: MinimalFooterPro
                 </div>
 
                 <div className="mt-16 border-t border-neutral-200 pt-8 text-center text-sm text-neutral-500">
-                    © {new Date().getFullYear()} Caps Project. Todos los derechos reservados.
+                    © {new Date().getFullYear()} Fortune. Todos los derechos reservados.
                 </div>
             </div>
         </footer>

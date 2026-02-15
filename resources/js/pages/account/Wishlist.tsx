@@ -4,7 +4,7 @@ export default function AccountWishlist() {
     return (
         <>
             <Head>
-                <title>Favoritos | Caps Project</title>
+                <title>Favoritos | Fortune</title>
             </Head>
             <main className="mx-auto max-w-7xl px-4 py-16">
                 <h1 className="text-2xl font-bold text-neutral-900">Favoritos</h1>

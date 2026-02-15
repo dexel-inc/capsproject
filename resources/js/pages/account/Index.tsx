@@ -4,7 +4,7 @@ export default function AccountIndex() {
     return (
         <>
             <Head>
-                <title>Mi cuenta | Caps Project</title>
+                <title>Mi cuenta | Fortune</title>
             </Head>
             <main className="mx-auto max-w-7xl px-4 py-16">
                 <h1 className="text-2xl font-bold text-neutral-900">Mi cuenta</h1>

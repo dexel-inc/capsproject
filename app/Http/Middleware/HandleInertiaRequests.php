@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -19,10 +20,18 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $cartService = app(CartService::class);
+        $cartItems = $cartService->getItems();
+        $cartCount = $cartService->count();
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'flash' => [
+                'cartAdded' => $request->session()->get('cartAdded'),
+                'auth_modal' => $request->session()->get('auth_modal'),
+                'auth_old_input' => $request->session()->get('_old_input'),
+            ],
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,
@@ -31,6 +40,10 @@ class HandleInertiaRequests extends Middleware
                     'roles' => $user->roles->pluck('name'),
                     'is_admin' => $user->isAdmin(),
                 ] : null,
+            ],
+            'cart' => [
+                'count' => $cartCount,
+                'items' => $cartItems,
             ],
         ];
     }
