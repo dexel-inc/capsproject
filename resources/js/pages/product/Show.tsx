@@ -1,6 +1,6 @@
-import { Head, Link, router } from '@inertiajs/react';
+﻿import { Head, Link, router } from '@inertiajs/react';
 import { ChevronLeft, ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { formatPrice } from '@/lib/formatPrice';
 import type { ProductDetail } from '@/types/product';
@@ -8,6 +8,8 @@ import type { ProductDetail } from '@/types/product';
 interface ProductShowProps {
     product: ProductDetail;
 }
+
+const SITE_URL = (import.meta.env.VITE_APP_URL || 'https://fortunecaps.co').replace(/\/$/, '');
 
 export default function ProductShow({ product }: ProductShowProps) {
     const [adding, setAdding] = useState(false);
@@ -21,6 +23,30 @@ export default function ProductShow({ product }: ProductShowProps) {
               ? [product.primaryImage]
               : [];
 
+    const productSchema = useMemo(
+        () => ({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.name,
+            image: images,
+            description:
+                product.description || 'Gorra premium Fortune con diseno minimalista y materiales de alta calidad.',
+            sku: product.slug,
+            brand: {
+                '@type': 'Brand',
+                name: 'Fortune',
+            },
+            offers: {
+                '@type': 'Offer',
+                url: `${SITE_URL}/catalog/${product.slug}`,
+                priceCurrency: product.currency,
+                price: product.price,
+                availability: 'https://schema.org/InStock',
+            },
+        }),
+        [images, product.currency, product.description, product.name, product.price, product.slug]
+    );
+
     const handleAddToCart = () => {
         setAdding(true);
         router.post('/cart', { slug: product.slug, quantity: 1 }, {
@@ -31,18 +57,26 @@ export default function ProductShow({ product }: ProductShowProps) {
 
     return (
         <>
-            <Head title={`${product.name} | Fortune`} />
+            <Head>
+                <title>{`${product.name} | Fortune`}</title>
+                <meta
+                    name="description"
+                    content={`${product.name} en Fortune. Gorra premium con estilo elegante y minimalista.`}
+                />
+                <link rel="canonical" href={`${SITE_URL}/catalog/${product.slug}`} />
+                {selectedImage && <meta property="og:image" content={selectedImage} />}
+                <script type="application/ld+json">{JSON.stringify(productSchema)}</script>
+            </Head>
             <main className="mx-auto max-w-7xl px-4 py-8 lg:py-12">
                 <Link
                     href="/catalog"
                     className="mb-6 inline-flex items-center gap-1 text-sm text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                 >
                     <ChevronLeft className="h-4 w-4" />
-                    Volver al catálogo
+                    Volver al catalogo
                 </Link>
 
                 <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-                    {/* Galería de imágenes */}
                     <div className="flex flex-col gap-4 sm:flex-row">
                         {images.length > 1 && (
                             <div className="flex flex-row gap-2 sm:flex-col sm:gap-3">
@@ -82,7 +116,6 @@ export default function ProductShow({ product }: ProductShowProps) {
                         </div>
                     </div>
 
-                    {/* Info del producto */}
                     <div className="flex flex-col">
                         <h1 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
                             {product.name}
@@ -95,7 +128,7 @@ export default function ProductShow({ product }: ProductShowProps) {
                         {product.description && (
                             <div className="mt-6">
                                 <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">
-                                    Descripción
+                                    Descripcion
                                 </h2>
                                 <p className="mt-2 text-neutral-600 leading-relaxed">{product.description}</p>
                             </div>
@@ -103,7 +136,7 @@ export default function ProductShow({ product }: ProductShowProps) {
 
                         {!product.description && (
                             <p className="mt-6 text-neutral-600">
-                                Gorra premium de alta calidad. Diseño atemporal y materiales que garantizan durabilidad y
+                                Gorra premium de alta calidad. Diseno atemporal y materiales que garantizan durabilidad y
                                 estilo.
                             </p>
                         )}
@@ -131,3 +164,4 @@ export default function ProductShow({ product }: ProductShowProps) {
         </>
     );
 }
+
