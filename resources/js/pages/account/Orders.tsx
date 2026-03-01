@@ -9,6 +9,7 @@ type OrderItem = {
 
 type Order = {
     id: number;
+    order_number: string | null;
     status: string;
     status_label: string;
     payment_method_label: string;
@@ -79,7 +80,7 @@ export default function AccountOrders({ orders }: Props) {
                             >
                                 <div className="flex flex-wrap items-start justify-between gap-4">
                                     <div>
-                                        <p className="font-semibold text-neutral-900">Pedido #{order.id}</p>
+                                <p className="font-semibold text-neutral-900">Pedido {order.order_number || `#${order.id}`}</p>
                                         <p className="text-sm text-neutral-500">{formatDate(order.created_at)}</p>
                                         <span className="mt-2 inline-block rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
                                             {order.status_label}
@@ -107,3 +108,4 @@ export default function AccountOrders({ orders }: Props) {
         </>
     );
 }
+
