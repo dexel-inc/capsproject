@@ -4,6 +4,7 @@ import { CheckCircle } from 'lucide-react';
 type Props = {
     order: {
         id: number;
+        order_number: string | null;
         customer_name: string;
         customer_email: string;
         payment_method: string;
@@ -32,7 +33,7 @@ export default function CheckoutThankYou({ order }: Props) {
                 </div>
                 <h1 className="mt-6 text-3xl font-bold text-neutral-900">¡Pedido confirmado!</h1>
                 <p className="mt-2 text-neutral-600">
-                    Gracias, {order.customer_name}. Tu pedido #{order.id} ha sido recibido.
+                    Gracias, {order.customer_name}. Tu pedido {order.order_number || `#${order.id}`} ha sido recibido.
                 </p>
                 <p className="mt-4 text-sm text-neutral-500">
                     Enviaremos los detalles y el estado del pedido a <strong>{order.customer_email}</strong>.
@@ -75,3 +76,4 @@ export default function CheckoutThankYou({ order }: Props) {
         </>
     );
 }
+
