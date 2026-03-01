@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+﻿import { Link } from '@inertiajs/react';
 import { Eye, Pencil } from 'lucide-react';
 
 import AppButton from '@/components/ui/AppButton';
@@ -10,7 +10,8 @@ type Product = {
     name: string;
     price: number | string;
     sku?: string | null;
-    stock?: string | null;
+    stock?: string | number | null;
+    is_featured?: boolean;
 };
 
 type Props = {
@@ -48,13 +49,27 @@ export default function Index({ products = [] }: Props) {
         {
             header: 'SKU',
             accessor: 'sku',
-            cell: (row) => <span className="text-zinc-600">{row.sku || '—'}</span>,
+            cell: (row) => <span className="text-zinc-600">{row.sku || '-'}</span>,
         },
         {
             header: 'Stock',
             accessor: 'stock',
             align: 'center',
-            cell: (row) => <span className="text-zinc-600">{row.stock || '—'}</span>,
+            cell: (row) => <span className="text-zinc-600">{row.stock ?? '-'}</span>,
+        },
+        {
+            header: 'Destacado',
+            accessor: 'is_featured',
+            align: 'center',
+            cell: (row) => (
+                <span
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        row.is_featured ? 'bg-emerald-100 text-emerald-700' : 'bg-zinc-100 text-zinc-500'
+                    }`}
+                >
+                    {row.is_featured ? 'Si' : 'No'}
+                </span>
+            ),
         },
         {
             header: 'Acciones',
@@ -90,3 +105,4 @@ export default function Index({ products = [] }: Props) {
         </div>
     );
 }
+
