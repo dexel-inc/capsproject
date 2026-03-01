@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
         $action->execute($product, $request->validated());
 
-        return redirect()->back();
+        return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente.');
     }
 
     public function show(Product $product): Response
