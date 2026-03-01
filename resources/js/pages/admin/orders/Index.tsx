@@ -5,6 +5,7 @@ import AppTitle from '@/components/ui/AppTitle';
 
 type Order = {
     id: number;
+    order_number: string | null;
     customer_name: string;
     customer_email: string;
     customer_phone: string;
@@ -101,7 +102,7 @@ export default function AdminOrdersIndex({ orders }: Props) {
                                     <tr key={order.id} className="hover:bg-zinc-50/50">
                                         <td className="px-4 py-4">
                                             <div>
-                                                <p className="font-medium text-zinc-900">#{order.id}</p>
+                                                <p className="font-medium text-zinc-900">{order.order_number || `#${order.id}`}</p>
                                                 <p className="text-sm text-zinc-600">{order.customer_name}</p>
                                                 <p className="text-xs text-zinc-500">{order.customer_email}</p>
                                             </div>
@@ -143,3 +144,4 @@ export default function AdminOrdersIndex({ orders }: Props) {
         </>
     );
 }
+
