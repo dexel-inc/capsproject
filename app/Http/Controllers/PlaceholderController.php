@@ -18,4 +18,9 @@ final class PlaceholderController extends Controller
     {
         return Inertia::render('placeholder/Cart', ['title' => 'Carrito']);
     }
+
+    public function care(): Response
+    {
+        return Inertia::render('placeholder/Care', ['title' => 'Cuidado del Producto']);
+    }
 }
