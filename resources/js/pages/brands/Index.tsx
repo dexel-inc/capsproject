@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { ImagePlus, Pencil, Tag, Trash2, X } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 
@@ -32,6 +32,8 @@ type EditFormData = {
 };
 
 export default function Index({ brands }: Props) {
+    const page = usePage<{ flash?: { success?: string; error?: string } }>();
+    const flash = page.props.flash ?? {};
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
@@ -198,6 +200,13 @@ export default function Index({ brands }: Props) {
         });
     };
 
+    const destroyBrand = (brand: Brand) => {
+        if ((brand.products_count ?? 0) > 0) return;
+        if (!window.confirm(`Eliminar la marca "${brand.name}"?`)) return;
+
+        router.delete(`/brands/${brand.id}`, { preserveScroll: true });
+    };
+
     const columns: Column<Brand>[] = [
         {
             header: 'Nombre',
@@ -252,9 +261,11 @@ export default function Index({ brands }: Props) {
 
                     <button
                         type="button"
-                        onClick={() => console.log('Eliminar', row.id)}
-                        className="text-red-500 hover:text-red-700"
+                        onClick={() => destroyBrand(row)}
+                        disabled={(row.products_count ?? 0) > 0}
+                        className="text-red-500 hover:text-red-700 disabled:cursor-not-allowed disabled:text-zinc-300"
                         aria-label={`Eliminar ${row.name}`}
+                        title={(row.products_count ?? 0) > 0 ? 'No puedes eliminar una marca con productos asociados' : `Eliminar ${row.name}`}
                     >
                         <Trash2 className="h-4 w-4" />
                     </button>
@@ -265,6 +276,15 @@ export default function Index({ brands }: Props) {
 
     return (
         <div className="p-6">
+            {(flash.success || flash.error) && (
+                <div
+                    className={`mb-4 rounded-xl border px-4 py-3 text-sm ${
+                        flash.error ? 'border-red-200 bg-red-50 text-red-700' : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                    }`}
+                >
+                    {flash.error ?? flash.success}
+                </div>
+            )}
             <div className="flex justify-end py-4">
                 <AppButton onClick={openCreateModal}>Agregar Marca</AppButton>
             </div>
