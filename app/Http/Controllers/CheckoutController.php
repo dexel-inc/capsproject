@@ -7,9 +7,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCheckoutRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Services\CartService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -54,7 +57,7 @@ final class CheckoutController extends Controller
     {
         $items = $this->cart->getItems();
         if (empty($items)) {
-            return redirect()->route('cart')->with('error', 'El carrito está vacío.');
+            return redirect()->route('cart')->with('error', 'El carrito esta vacio.');
         }
 
         $subtotal = 0;
@@ -62,27 +65,49 @@ final class CheckoutController extends Controller
             $subtotal += $item['price'] * $item['quantity'];
         }
 
-        $order = Order::create([
-            'user_id' => auth()->id(),
-            'customer_name' => $request->validated('customer_name'),
-            'customer_email' => $request->validated('customer_email'),
-            'customer_phone' => $request->validated('customer_phone'),
-            'address' => $request->validated('address'),
-            'city' => $request->validated('city'),
-            'payment_method' => $request->validated('payment_method'),
-            'status' => 'pending',
-            'subtotal' => $subtotal,
-            'notes' => $request->validated('notes'),
-        ]);
+        try {
+            $order = DB::transaction(function () use ($request, $items, $subtotal): Order {
+                $order = Order::create([
+                    'user_id' => auth()->id(),
+                    'customer_name' => $request->validated('customer_name'),
+                    'customer_email' => $request->validated('customer_email'),
+                    'customer_phone' => $request->validated('customer_phone'),
+                    'address' => $request->validated('address'),
+                    'city' => $request->validated('city'),
+                    'payment_method' => $request->validated('payment_method'),
+                    'status' => 'pending',
+                    'subtotal' => $subtotal,
+                    'notes' => $request->validated('notes'),
+                ]);
 
-        foreach ($items as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_slug' => $item['slug'],
-                'product_name' => $item['name'],
-                'price' => $item['price'],
-                'quantity' => $item['quantity'],
-            ]);
+                foreach ($items as $item) {
+                    $product = Product::query()->where('slug', $item['slug'])->lockForUpdate()->first();
+
+                    if ($product !== null) {
+                        $currentStock = is_numeric((string) $product->stock) ? (int) $product->stock : 0;
+                        if ($currentStock < $item['quantity']) {
+                            throw ValidationException::withMessages([
+                                'cart' => "No hay stock suficiente para {$product->name}. Disponible: {$currentStock}.",
+                            ]);
+                        }
+
+                        $product->stock = $currentStock - $item['quantity'];
+                        $product->save();
+                    }
+
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_slug' => $item['slug'],
+                        'product_name' => $item['name'],
+                        'price' => $item['price'],
+                        'quantity' => $item['quantity'],
+                    ]);
+                }
+
+                return $order;
+            });
+        } catch (ValidationException $exception) {
+            return redirect()->back()->withErrors($exception->errors());
         }
 
         $this->cart->clear();
@@ -102,6 +127,7 @@ final class CheckoutController extends Controller
         return Inertia::render('checkout/ThankYou', [
             'order' => [
                 'id' => $order->id,
+                'order_number' => $order->order_number,
                 'customer_name' => $order->customer_name,
                 'customer_email' => $order->customer_email,
                 'payment_method' => $order->payment_method,
@@ -116,3 +142,4 @@ final class CheckoutController extends Controller
         ]);
     }
 }
+
