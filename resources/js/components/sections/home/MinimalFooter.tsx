@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { Facebook, Instagram, Mail } from 'lucide-react';
+﻿import { Link } from '@inertiajs/react';
+import { Instagram, Mail } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 
 const HELP_LINKS = [
@@ -7,16 +7,9 @@ const HELP_LINKS = [
     { label: 'Cuidado del Producto', href: '/care' },
 ];
 
-const SERVICES_LINKS = [
-    { label: 'Personalización', href: '/personalization' },
-    { label: 'El Arte de Regalar', href: '/gift' },
-];
-
-const ABOUT_LINKS = [{ label: 'Noticias recientes', href: '/news' }];
-
 const SOCIAL_LINKS = [
-    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-    { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
+    { icon: Instagram, href: 'https://www.instagram.com/fortunecaps.co', label: 'Instagram Fortune' },
+    { icon: Mail, href: 'mailto:hola@fortunecaps.co', label: 'Correo Fortune' },
 ];
 
 interface MinimalFooterProps {
@@ -36,36 +29,15 @@ export default function MinimalFooter({ prefersReducedMotion }: MinimalFooterPro
     return (
         <footer className="border-t border-neutral-200 bg-white px-6 py-16 lg:py-24" role="contentinfo">
             <div className="mx-auto max-w-7xl">
-                <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
-                    {/* Ayuda */}
-                    <div className="lg:col-span-2">
+                <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+                    <div>
                         <h3 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">Ayuda</h3>
                         <p className="mt-4 max-w-sm text-sm leading-relaxed text-neutral-600">
-                            Un asesor de clientes estará disponible:
+                            Nuestro equipo atiende de lunes a viernes de 9:00 a.m. a 6:00 p.m.
                             <br />
-                            Lunes a Viernes de 10 am – 7 pm llamando al{' '}
-                            <a
-                                href="tel:+528009991807"
-                                className="font-medium text-neutral-900 underline decoration-neutral-400 underline-offset-2 transition-colors hover:decoration-neutral-900"
-                            >
-                                +52 800 999 1807
-                            </a>
-                            . También puede contactarnos a través de{' '}
-                            <a
-                                href="https://wa.me/528009991807"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-medium text-neutral-900 underline decoration-neutral-400 underline-offset-2 transition-colors hover:decoration-neutral-900"
-                            >
-                                WhatsApp
-                            </a>{' '}
-                            o enviarnos un correo electrónico a{' '}
-                            <a
-                                href="mailto:contacto@capsproject.com"
-                                className="font-medium text-neutral-900 underline decoration-neutral-400 underline-offset-2 transition-colors hover:decoration-neutral-900"
-                            >
-                                contacto@capsproject.com
-                            </a>
+                            Correo: <a href="mailto:hola@fortunecaps.co" className="font-medium text-neutral-900 underline underline-offset-2">hola@fortunecaps.co</a>
+                            <br />
+                            WhatsApp de soporte: en activacion (pendiente SIM empresarial).
                         </p>
                         <ul className="mt-6 space-y-2">
                             {HELP_LINKS.map(({ label, href }) => (
@@ -81,50 +53,12 @@ export default function MinimalFooter({ prefersReducedMotion }: MinimalFooterPro
                         </ul>
                     </div>
 
-                    {/* Servicios */}
-                    <div>
-                        <h3 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">Servicios</h3>
-                        <ul className="mt-4 space-y-3">
-                            {SERVICES_LINKS.map(({ label, href }) => (
-                                <li key={label}>
-                                    <Link
-                                        href={href}
-                                        className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 focus-visible:rounded"
-                                    >
-                                        {label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Acerca de nuestra marca */}
                     <div>
                         <h3 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">
-                            Acerca de nuestra marca
-                        </h3>
-                        <ul className="mt-4 space-y-3">
-                            {ABOUT_LINKS.map(({ label, href }) => (
-                                <li key={label}>
-                                    <Link
-                                        href={href}
-                                        className="text-sm text-neutral-600 transition-colors hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 focus-visible:rounded"
-                                    >
-                                        {label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Recibir Correos */}
-                    <div>
-                        <h3 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">
-                            Recibir Correos
+                            Recibir correos
                         </h3>
                         <p className="mt-4 text-sm text-neutral-600">
-                            Regístrese a los correos electrónicos de Caps y reciba las últimas noticias, incluyendo
-                            pre-lanzamientos exclusivos en línea y nuevas colecciones.
+                            Suscribete para conocer nuevos lanzamientos de gorras, reposiciones y ediciones limitadas.
                         </p>
                         <form onSubmit={handleNewsletterSubmit} className="mt-4">
                             <div className="flex gap-2">
@@ -146,19 +80,19 @@ export default function MinimalFooter({ prefersReducedMotion }: MinimalFooterPro
                                 </button>
                             </div>
                             {status === 'success' && (
-                                <p className="mt-2 text-xs text-green-600">¡Gracias por suscribirte!</p>
+                                <p className="mt-2 text-xs text-green-600">Gracias por suscribirte.</p>
                             )}
                         </form>
                         <h3 className="mt-8 text-sm font-semibold uppercase tracking-widest text-neutral-900">
-                            Síganos
+                            Siguenos
                         </h3>
                         <div className="mt-4 flex gap-3">
                             {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
                                 <a
                                     key={label}
                                     href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target={href.startsWith('http') ? '_blank' : undefined}
+                                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
                                     className="rounded-full p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 focus-visible:outline focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                                     aria-label={label}
                                 >
@@ -170,9 +104,10 @@ export default function MinimalFooter({ prefersReducedMotion }: MinimalFooterPro
                 </div>
 
                 <div className="mt-16 border-t border-neutral-200 pt-8 text-center text-sm text-neutral-500">
-                    © {new Date().getFullYear()} Fortune. Todos los derechos reservados.
+                    {prefersReducedMotion ? 'Fortune' : 'Fortune'} {new Date().getFullYear()}. Todos los derechos reservados.
                 </div>
             </div>
         </footer>
     );
 }
+
