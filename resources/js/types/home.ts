@@ -21,4 +21,5 @@ export interface Collection {
 export interface WelcomeProps {
     featuredProducts?: Product[];
     collections?: Collection[];
+    faqItems?: { question: string; answer: string }[];
 }
