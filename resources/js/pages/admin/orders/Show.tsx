@@ -14,6 +14,7 @@ type OrderItem = {
 
 type Order = {
     id: number;
+    order_number: string | null;
     customer_name: string;
     customer_email: string;
     customer_phone: string;
@@ -72,7 +73,7 @@ export default function AdminOrdersShow({ order, statuses }: Props) {
 
     return (
         <>
-            <Head title={`Orden #${order.id} | Admin`} />
+            <Head title={`Orden ${order.order_number} | Admin`} />
             <div>
                 <Link
                     href="/admin/orders"
@@ -87,7 +88,7 @@ export default function AdminOrdersShow({ order, statuses }: Props) {
                         <div className="rounded-xl border border-zinc-200 bg-white p-6">
                             <h2 className="flex items-center gap-2 text-lg font-semibold text-zinc-900">
                                 <Package className="h-5 w-5" />
-                                Pedido #{order.id}
+                                Pedido {order.order_number || `#${order.id}`}
                             </h2>
                             <p className="mt-1 text-sm text-zinc-500">{formatDate(order.created_at)}</p>
 
@@ -191,3 +192,4 @@ export default function AdminOrdersShow({ order, statuses }: Props) {
         </>
     );
 }
+
