@@ -25,6 +25,7 @@ type Product = {
     slug: string;
     sku?: string | null;
     stock?: string | number | null;
+    is_featured?: boolean;
     images?: ProductImage[];
 };
 
@@ -41,6 +42,7 @@ type FormData = {
     slug: string;
     sku: string;
     stock: string;
+    is_featured: boolean;
     images: File[];
     deleted_image_ids: number[];
 };
@@ -56,6 +58,7 @@ export default function Edit({ product, brands = [] }: Props) {
         slug: product.slug ?? '',
         sku: product.sku ?? '',
         stock: product.stock ? String(product.stock) : '',
+        is_featured: Boolean(product.is_featured),
         images: [],
         deleted_image_ids: [],
     });
@@ -200,12 +203,25 @@ export default function Edit({ product, brands = [] }: Props) {
                     <AppInput
                         label="Stock"
                         name="stock"
+                        type="number"
+                        min="0"
+                        step="1"
                         value={data.stock}
                         onChange={(e) => setData('stock', e.target.value)}
                         placeholder="Opcional"
                         error={errors.stock}
                     />
                 </div>
+
+                <label className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3">
+                    <input
+                        type="checkbox"
+                        checked={data.is_featured}
+                        onChange={(e) => setData('is_featured', e.target.checked)}
+                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
+                    />
+                    <span className="text-sm text-zinc-700">Mostrar en productos destacados</span>
+                </label>
 
                 {/* Existing images */}
                 <div>
