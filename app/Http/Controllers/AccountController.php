@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateAccountPasswordRequest;
+use App\Http\Requests\UpdateAccountProfileRequest;
 use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,6 +20,32 @@ final class AccountController extends Controller
         ]);
     }
 
+    public function updateProfile(UpdateAccountProfileRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        if ($user === null) {
+            return redirect()->route('login');
+        }
+
+        $user->update($request->validated());
+
+        return redirect()->route('account.index')->with('success', 'Perfil actualizado correctamente.');
+    }
+
+    public function updatePassword(UpdateAccountPasswordRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        if ($user === null) {
+            return redirect()->route('login');
+        }
+
+        $user->update([
+            'password' => $request->validated('password'),
+        ]);
+
+        return redirect()->route('account.index')->with('success', 'Contrasena actualizada correctamente.');
+    }
+
     public function orders(): Response
     {
         $user = auth()->user();
@@ -27,6 +56,7 @@ final class AccountController extends Controller
                 ->get()
                 ->map(fn (Order $order) => [
                     'id' => $order->id,
+                    'order_number' => $order->order_number,
                     'status' => $order->status,
                     'status_label' => Order::statuses()[$order->status] ?? $order->status,
                     'payment_method_label' => Order::paymentMethods()[$order->payment_method] ?? $order->payment_method,
@@ -52,3 +82,4 @@ final class AccountController extends Controller
         ]);
     }
 }
+
