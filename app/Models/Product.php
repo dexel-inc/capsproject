@@ -18,10 +18,13 @@ class Product extends Model
         'slug',
         'sku',
         'stock',
+        'is_featured',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'stock' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     public function brand(): BelongsTo
