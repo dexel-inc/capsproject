@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+﻿import { Head, Link, useForm } from '@inertiajs/react';
 import { Banknote, MapPin, Truck } from 'lucide-react';
 import type { FormEvent } from 'react';
 
@@ -64,12 +64,15 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
             <Head title="Completar pedido | Fortune" />
             <main className="mx-auto max-w-7xl px-4 py-8 lg:py-12">
                 <h1 className="text-3xl font-bold tracking-tight text-neutral-900">Completar pedido</h1>
-                <p className="mt-2 text-neutral-600">
-                    Completa tus datos y elige el método de pago.
-                </p>
+                <p className="mt-2 text-neutral-600">Completa tus datos y elige el metodo de pago.</p>
+                {getError('cart') && (
+                    <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {getError('cart')}
+                    </div>
+                )}
 
                 <form onSubmit={submit} className="mt-8 lg:grid lg:grid-cols-3 lg:gap-12">
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="space-y-6 lg:col-span-2">
                         <section className="rounded-2xl border border-neutral-200 bg-white p-6">
                             <h2 className="text-lg font-semibold text-neutral-900">Datos de contacto</h2>
                             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -82,7 +85,7 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                                     autoComplete="name"
                                 />
                                 <AppInput
-                                    label="Correo electrónico"
+                                    label="Correo electronico"
                                     type="email"
                                     value={data.customer_email}
                                     onChange={(e) => setData('customer_email', e.target.value)}
@@ -106,17 +109,17 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                         <section className="rounded-2xl border border-neutral-200 bg-white p-6">
                             <h2 className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
                                 <MapPin className="h-5 w-5" />
-                                Dirección de entrega
+                                Direccion de entrega
                             </h2>
                             <div className="mt-4 space-y-4">
                                 <AppInput
-                                    label="Dirección"
+                                    label="Direccion"
                                     value={data.address}
                                     onChange={(e) => setData('address', e.target.value)}
                                     error={getError('address')}
                                     required
                                     autoComplete="street-address"
-                                    placeholder="Calle, número, barrio"
+                                    placeholder="Calle, numero, barrio"
                                 />
                                 <AppInput
                                     label="Ciudad (opcional)"
@@ -138,7 +141,7 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                         <section className="rounded-2xl border border-neutral-200 bg-white p-6">
                             <h2 className="flex items-center gap-2 text-lg font-semibold text-neutral-900">
                                 <Banknote className="h-5 w-5" />
-                                Método de pago
+                                Metodo de pago
                             </h2>
                             <div className="mt-4 space-y-3">
                                 <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-neutral-200 p-4 transition-colors has-[:checked]:border-neutral-900 has-[:checked]:bg-neutral-50">
@@ -152,9 +155,7 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                                     />
                                     <Truck className="h-5 w-5 shrink-0 text-neutral-600" />
                                     <div>
-                                        <span className="font-medium text-neutral-900">
-                                            {paymentMethods.contra_entrega}
-                                        </span>
+                                        <span className="font-medium text-neutral-900">{paymentMethods.contra_entrega}</span>
                                         <p className="text-sm text-neutral-500">Paga al recibir tu pedido</p>
                                     </div>
                                 </label>
@@ -169,12 +170,8 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                                     />
                                     <Banknote className="h-5 w-5 shrink-0 text-neutral-600" />
                                     <div>
-                                        <span className="font-medium text-neutral-900">
-                                            {paymentMethods.transferencia}
-                                        </span>
-                                        <p className="text-sm text-neutral-500">
-                                            Te enviaremos los datos por correo
-                                        </p>
+                                        <span className="font-medium text-neutral-900">{paymentMethods.transferencia}</span>
+                                        <p className="text-sm text-neutral-500">Te enviaremos los datos por correo</p>
                                     </div>
                                 </label>
                             </div>
@@ -191,16 +188,12 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                                 {items.map((item) => (
                                     <li key={item.slug} className="flex gap-3 text-sm">
                                         <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                className="h-full w-full object-cover"
-                                            />
+                                            <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="font-medium text-neutral-900">{item.name}</p>
                                             <p className="text-neutral-500">
-                                                {item.quantity} × {formatPrice(item.price, item.currency)}
+                                                {item.quantity} x {formatPrice(item.price, item.currency)}
                                             </p>
                                         </div>
                                         <p className="shrink-0 font-medium text-neutral-900">
@@ -212,23 +205,13 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
                             <div className="mt-4 border-t border-neutral-200 pt-4">
                                 <div className="flex justify-between text-base font-semibold text-neutral-900">
                                     <span>Subtotal</span>
-                                    <span>
-                                        {formatPrice(subtotal, items[0]?.currency ?? 'COP')}
-                                    </span>
+                                    <span>{formatPrice(subtotal, items[0]?.currency ?? 'COP')}</span>
                                 </div>
                             </div>
-                            <AppButton
-                                type="submit"
-                                className="mt-6 w-full"
-                                loading={processing}
-                                disabled={processing}
-                            >
+                            <AppButton type="submit" className="mt-6 w-full" loading={processing} disabled={processing}>
                                 Confirmar pedido
                             </AppButton>
-                            <Link
-                                href="/cart"
-                                className="mt-3 block text-center text-sm text-neutral-600 hover:text-neutral-900"
-                            >
+                            <Link href="/cart" className="mt-3 block text-center text-sm text-neutral-600 hover:text-neutral-900">
                                 Volver al carrito
                             </Link>
                         </div>
@@ -238,3 +221,4 @@ export default function CheckoutIndex({ items, subtotal, defaults, paymentMethod
         </>
     );
 }
+
