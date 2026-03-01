@@ -18,6 +18,7 @@ const landingPages = [
     'checkout/Index',
     'checkout/ThankYou',
     'placeholder/Faq',
+    'placeholder/Care',
     'account/Index',
     'account/Orders',
     'account/Wishlist',
