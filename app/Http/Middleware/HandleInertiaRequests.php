@@ -31,6 +31,8 @@ class HandleInertiaRequests extends Middleware
                 'cartAdded' => $request->session()->get('cartAdded'),
                 'auth_modal' => $request->session()->get('auth_modal'),
                 'auth_old_input' => $request->session()->get('_old_input'),
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
             ],
             'auth' => [
                 'user' => $user ? [
