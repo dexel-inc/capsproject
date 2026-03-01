@@ -19,6 +19,7 @@ class StoreProductAction
             'slug' => $this->resolveUniqueSlug($data),
             'sku' => $data['sku'] ?? null,
             'stock' => $data['stock'] ?? null,
+            'is_featured' => (bool) ($data['is_featured'] ?? false),
         ]);
 
         $imagesPayload = collect($data['images'] ?? [])
