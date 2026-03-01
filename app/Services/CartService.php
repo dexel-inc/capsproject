@@ -61,6 +61,7 @@ final class CartService
             $cart[] = ['slug' => $slug, 'quantity' => $quantity];
         }
 
+        $cart = $this->applyStockLimits($cart);
         session([self::SESSION_KEY => $cart]);
     }
 
@@ -74,6 +75,7 @@ final class CartService
         foreach ($cart as &$row) {
             if (($row['slug'] ?? '') === $slug) {
                 $row['quantity'] = $quantity;
+                $cart = $this->applyStockLimits($cart);
                 session([self::SESSION_KEY => $cart]);
 
                 return true;
@@ -108,6 +110,42 @@ final class CartService
         session()->forget(self::SESSION_KEY);
     }
 
+    private function applyStockLimits(array $cart): array
+    {
+        foreach ($cart as $index => $row) {
+            $slug = (string) ($row['slug'] ?? '');
+            if ($slug === '') {
+                unset($cart[$index]);
+                continue;
+            }
+
+            $stock = $this->getStockForSlug($slug);
+            if ($stock === null) {
+                continue;
+            }
+
+            $quantity = (int) ($row['quantity'] ?? 0);
+            if ($stock === 0) {
+                unset($cart[$index]);
+                continue;
+            }
+
+            $cart[$index]['quantity'] = max(1, min($quantity, $stock));
+        }
+
+        return array_values($cart);
+    }
+
+    private function getStockForSlug(string $slug): ?int
+    {
+        $fromDb = Product::query()->where('slug', $slug)->first(['stock']);
+        if ($fromDb === null || $fromDb->stock === null || ! is_numeric((string) $fromDb->stock)) {
+            return null;
+        }
+
+        return max(0, (int) $fromDb->stock);
+    }
+
     /**
      * @return array{name: string, price: float|int, currency: string, image: string}|null
      */
@@ -116,7 +154,7 @@ final class CartService
         $fromDb = Product::where('slug', $slug)->with('images')->first();
         if ($fromDb) {
             $firstImage = $fromDb->images->first();
-            $image = $firstImage?->url ?: ($firstImage ? '/storage/'.$firstImage->path : '');
+            $image = $firstImage?->url ?: ($firstImage ? '/storage/' . $firstImage->path : '');
 
             return [
                 'name' => $fromDb->name,
@@ -153,3 +191,4 @@ final class CartService
         ];
     }
 }
+
