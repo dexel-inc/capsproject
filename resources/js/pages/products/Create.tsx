@@ -22,6 +22,7 @@ type ProductForm = {
     slug: string;
     sku: string;
     stock: string;
+    is_featured: boolean;
     images: File[];
 };
 
@@ -52,6 +53,7 @@ export default function Create({ brands }: Props) {
         slug: '',
         sku: '',
         stock: '',
+        is_featured: false,
         images: [],
     });
 
@@ -179,6 +181,9 @@ export default function Create({ brands }: Props) {
                     <AppInput
                         label="Stock"
                         name="stock"
+                        type="number"
+                        min="0"
+                        step="1"
                         value={data.stock}
                         onChange={(e) => setData('stock', e.target.value)}
                         placeholder="Ej: 25"
@@ -186,6 +191,16 @@ export default function Create({ brands }: Props) {
                         leftIcon={<Hash className="h-4 w-4" />}
                     />
                 </div>
+
+                <label className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3">
+                    <input
+                        type="checkbox"
+                        checked={data.is_featured}
+                        onChange={(e) => setData('is_featured', e.target.checked)}
+                        className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500"
+                    />
+                    <span className="text-sm text-zinc-700">Marcar como producto destacado</span>
+                </label>
 
                 {/* Slug y SKU */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
